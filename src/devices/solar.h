@@ -116,6 +116,31 @@ class Solar : public EMSdevice {
     void process_ISM1Set(std::shared_ptr<const Telegram> telegram);
     
     
+    void param_handler_default(std::shared_ptr<const Telegram> telegram);
+    
+    struct devparam {
+        int32_t value;
+        const uint16_t tid;   // telegram id
+        uint8_t offset; // telegram offset
+        uint8_t size;   // number of bytes in telegram
+    };
+    
+    struct devparam devparams[2] = {
+        { EMS_VALUE_ULONG_NOTSET, 0x35A, 0, 1 },
+        { EMS_VALUE_ULONG_NOTSET, 0x35A, 3, 1 }
+    };
+
+    struct telegram {
+        void (emsesp::Solar::*handler_function)(std::shared_ptr<const Telegram> telegram); // handler function
+        uint16_t tid;   // telegram id
+        bool should_poll;
+        char telegram_name[29];
+    };
+    
+    const struct telegram telegrams[1] = {
+        { &emsesp::Solar::param_handler_default, 0x358, true, "SM100SolarCircuitConfig" }
+    };
+    
     bool set_SM100Tank1MaxTemp(const char * value, const int8_t id);
 };
 
