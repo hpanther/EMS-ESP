@@ -40,12 +40,13 @@ Solar::Solar(uint8_t device_type, uint8_t device_id, uint8_t product_id, const s
             register_telegram_type(0x07AB, F("SM100wwCommand"), false, [&](std::shared_ptr<const Telegram> t) { process_SM100wwCommand(t); });
         } else {
             register_telegram_type(EMS_TYPE_ParamCfg, F("ParamCfg"), false, [&](std::shared_ptr<const Telegram> t) { process_SM100ParamCfg(t); });
-            register_telegram_type(0x0358, F("SM100SystemConfig"), true, [&](std::shared_ptr<const Telegram> t) { process_SM100SystemConfig(t); });
+
 #define T(string_literal) (reinterpret_cast<const __FlashStringHelper *>(string_literal))
             for (unsigned int i=0; i<sizeof(telegrams)/sizeof(struct telegram); i++) {
                 register_telegram_type(telegrams[i].tid, T(telegrams[i].telegram_name), telegrams[i].should_poll, [&](std::shared_ptr<const Telegram> t) { (this->*telegrams[i].handler_function)(t); });
             }
             //register_telegram_type(0x0358, F("SM100SystemConfig"), true, [&](std::shared_ptr<const Telegram> t) { process_SM100SystemConfig(t); });
+
             register_telegram_type(0x035A, F("SM100SolarCircuitConfig"), true, [&](std::shared_ptr<const Telegram> t) { process_SM100SolarCircuitConfig(t); });
             register_telegram_type(0x0362, F("SM100Monitor"), true, [&](std::shared_ptr<const Telegram> t) { process_SM100Monitor(t); });
             register_telegram_type(0x0363, F("SM100Monitor2"), true, [&](std::shared_ptr<const Telegram> t) { process_SM100Monitor2(t); });

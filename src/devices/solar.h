@@ -125,9 +125,14 @@ class Solar : public EMSdevice {
         uint8_t size;   // number of bytes in telegram
     };
     
+    #define SM100_SYSTEM_CONFIG                             0x358
+    #define SM100_SOLAR_CIRCUIT_CONFIG                      0x35A
+
+#define SM100_SOLAR_CIRCUIT_CONFIG_COLLECTOR_TEMP_MAX   0
+#define SM100_SOLAR_CIRCUIT_CONFIG_TANK1_TEMP_MAX       3
     struct devparam devparams[2] = {
-        { EMS_VALUE_ULONG_NOTSET, 0x35A, 0, 1 },
-        { EMS_VALUE_ULONG_NOTSET, 0x35A, 3, 1 }
+        { EMS_VALUE_ULONG_NOTSET, SM100_SOLAR_CIRCUIT_CONFIG, SM100_SOLAR_CIRCUIT_CONFIG_COLLECTOR_TEMP_MAX, 1 },
+        { EMS_VALUE_ULONG_NOTSET, SM100_SOLAR_CIRCUIT_CONFIG, SM100_SOLAR_CIRCUIT_CONFIG_TANK1_TEMP_MAX, 1 }
     };
 
     struct telegram {
@@ -137,8 +142,9 @@ class Solar : public EMSdevice {
         char telegram_name[29];
     };
     
-    const struct telegram telegrams[1] = {
-        { &emsesp::Solar::param_handler_default, 0x358, true, "SM100SolarCircuitConfig" }
+    const struct telegram telegrams[2] = {
+        { &emsesp::Solar::param_handler_default, SM100_SYSTEM_CONFIG, true, "SM100SystemConfig" },
+        { &emsesp::Solar::param_handler_default, SM100_SOLAR_CIRCUIT_CONFIG, true, "SM100SolarCircuitConfig" }
     };
     
     bool set_SM100Tank1MaxTemp(const char * value, const int8_t id);
